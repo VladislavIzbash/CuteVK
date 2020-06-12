@@ -1,4 +1,4 @@
-QT       += core gui
+QT += core gui webengine webenginewidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,12 +16,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/apiclient/ApiClient.cpp \
     src/chat/ChatWindow.cpp \
     src/chat/DialogEntryDelegate.cpp \
     src/chat/DialogListModel.cpp \
     src/main.cpp
 
 HEADERS += \
+    src/apiclient/ApiClient.h \
     src/chat/ChatWindow.h \
     src/chat/DialogEntryDelegate.h \
     src/chat/DialogListModel.h
@@ -30,7 +32,7 @@ FORMS += \
     src/chat/ChatWindow.ui
 
 TRANSLATIONS += \
-    resources/CuteVK_ru_RU.ts
+    resources/translations/CuteVK_ru_RU.ts
 
 RESOURCES += \
     resources.qrc
@@ -38,8 +40,8 @@ RESOURCES += \
 system(lrelease \"$$_PRO_FILE_\")
 
 tr.commands = lupdate \"$$_PRO_FILE_\" && lrelease \"$$_PRO_FILE_\"
-    PRE_TARGETDEPS += tr
-    QMAKE_EXTRA_TARGETS += tr
+PRE_TARGETDEPS += tr
+QMAKE_EXTRA_TARGETS += tr
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

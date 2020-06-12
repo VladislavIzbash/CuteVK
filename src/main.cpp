@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <QtDebug>
 #include <QTranslator>
-
+#include <QtWebEngine>
 
 int main(int argc, char *argv[])
 {

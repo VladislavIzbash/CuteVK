@@ -69,7 +69,7 @@
     <property name="title">
      <string>Account</string>
     </property>
-    <addaction name="actionSwitch"/>
+    <addaction name="actionLogin"/>
     <addaction name="actionLogout"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
@@ -102,14 +102,14 @@
     </layout>
    </widget>
   </widget>
-  <action name="actionSwitch">
+  <action name="actionLogin">
    <property name="text">
-    <string>Switch</string>
+    <string>Login</string>
    </property>
   </action>
   <action name="actionLogout">
    <property name="text">
-    <string>Log out</string>
+    <string>Logout</string>
    </property>
   </action>
  </widget>

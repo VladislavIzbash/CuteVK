@@ -1,10 +1,10 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ChatWindow; }
+class QWebEngineView;
 QT_END_NAMESPACE
 
 class ChatWindow : public QMainWindow
@@ -15,7 +15,13 @@ public:
     ChatWindow(QWidget *parent = nullptr);
     ~ChatWindow();
 
+private slots:
+    void openLoginWindow();
+
+    void extractToken(const QUrl &url);
+
 private:
     Ui::ChatWindow *ui;
+    QWebEngineView *loginView;
+
 };
-#endif // MAINWINDOW_H

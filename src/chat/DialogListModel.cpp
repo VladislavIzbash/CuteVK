@@ -4,9 +4,12 @@ DialogListModel::DialogListModel(QObject *parent)
     : QAbstractListModel(parent)
 {
     QImage emptyImage;
+    QString name = QString::fromUtf8("Владислав Избаш ");
 
-    m_dialogs.append({emptyImage, QString::fromUtf8("Владислав Избаш"), true});
-    m_dialogs.append({emptyImage, "Vladislav2", false});
+    for (int i = 0; i < 9; i++) {
+        bool online = qrand() % 2;
+        m_dialogs.append({emptyImage, name + QString::number(i), online});
+    }
 }
 
 
