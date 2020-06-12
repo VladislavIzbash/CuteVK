@@ -17,10 +17,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     src/chat/ChatWindow.cpp \
+    src/chat/DialogEntryDelegate.cpp \
+    src/chat/DialogListModel.cpp \
     src/main.cpp
 
 HEADERS += \
-    src/chat/ChatWindow.h
+    src/chat/ChatWindow.h \
+    src/chat/DialogEntryDelegate.h \
+    src/chat/DialogListModel.h
 
 FORMS += \
     src/chat/ChatWindow.ui

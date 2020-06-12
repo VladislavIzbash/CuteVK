@@ -1,4 +1,4 @@
-#include "ChatWindow.h"
+#include "chat/ChatWindow.h"
 
 #include <QApplication>
 #include <QtDebug>
@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QTranslator translator;
-    translator.load(":/CuteVK_" + QLocale::system().name() + ".qm");
+    translator.load(":/translations/" + QLocale::system().name());
     app.installTranslator(&translator);
 
     ChatWindow w;

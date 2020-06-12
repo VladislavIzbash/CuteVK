@@ -1,8 +1,12 @@
 #include "ChatWindow.h"
 #include "ui_ChatWindow.h"
 
+#include "DialogEntryDelegate.h"
+#include "DialogListModel.h"
+
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QImageReader>
 
 ChatWindow::ChatWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -21,6 +25,11 @@ ChatWindow::ChatWindow(QWidget *parent)
     statusBarWidget->setLayout(hLayout);
 
     ui->statusbar->addWidget(statusBarWidget);
+
+    QImageReader imageReader(":/images/photo_placeholder");
+
+    ui->dialogView->setModel(new DialogListModel());
+    ui->dialogView->setItemDelegate(new DialogEntryDelegate(imageReader.read()));
 }
 
 ChatWindow::~ChatWindow()

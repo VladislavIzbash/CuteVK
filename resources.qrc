@@ -1,5 +1,8 @@
 <RCC>
-    <qresource prefix="/">
-        <file>CuteVK_ru_RU.qm</file>
+    <qresource prefix="/translations">
+        <file alias="ru_RU">resources/translations/CuteVK_ru_RU.qm</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file alias="photo_placeholder">resources/images/photo_placeholder.png</file>
     </qresource>
 </RCC>
