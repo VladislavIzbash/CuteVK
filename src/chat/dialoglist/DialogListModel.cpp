@@ -1,15 +1,16 @@
 #include "DialogListModel.h"
 
-#include "../api/ApiClient.h"
+#include "src/api/ApiClient.h"
 
 DialogListModel::DialogListModel(ApiClient *apiClient, QObject *parent)
     : QAbstractListModel(parent)
     , m_apiClient(apiClient)
 {
     m_apiClient->queryConversationsAsync(0, 10);
-    connect(m_apiClient, &ApiClient::queryConversationsDone, [this] (QVector<DialogEntry> dialogs) {
+    connect(m_apiClient, &ApiClient::queryConversationsDone, this, [this] (QVector<DialogEntry> dialogs) {
        m_dialogs.append(dialogs);
        emit dataChanged(createIndex(0, 0), createIndex(10, 0));
+       emit loadingDone();
     });
 }
 

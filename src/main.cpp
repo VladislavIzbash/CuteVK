@@ -1,11 +1,11 @@
 #include "chat/ChatWindow.h"
 
+#include "api/ApiClient.h"
+
 #include <QApplication>
 #include <QtDebug>
 #include <QTranslator>
 #include <QtWebEngine>
-
-#include "api/ApiClient.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,10 +15,8 @@ int main(int argc, char *argv[])
     translator.load(":/translations/" + QLocale::system().name());
     app.installTranslator(&translator);
 
-    ChatWindow w;
-    w.show();
-
-
+    ChatWindow window;
+    window.show();
 
     return app.exec();
 }

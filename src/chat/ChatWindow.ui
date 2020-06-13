@@ -97,9 +97,12 @@
    <widget class="QWidget" name="dialogDockContents">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QListView" name="dialogView">
-       <property name="spacing">
-        <number>2</number>
+      <widget class="DialogListWidget" name="dialogListWidget">
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -117,6 +120,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DialogListWidget</class>
+   <extends>QListView</extends>
+   <header>src/chat/dialoglist/DialogListWidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

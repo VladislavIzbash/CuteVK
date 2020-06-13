@@ -2,13 +2,21 @@
 
 #include <QWidget>
 
+class QListView;
+class KBusyIndicatorWidget;
+
 class DialogListWidget : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit DialogListWidget(QWidget *parent = nullptr);
 
-signals:
+private slots:
+    void displayList();
 
+private:
+    QListView *m_dialogList;
+    KBusyIndicatorWidget *m_loadingSpinner;
 };
 

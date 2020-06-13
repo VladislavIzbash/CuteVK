@@ -34,22 +34,22 @@
         <translation>Диалоги</translation>
     </message>
     <message>
-        <location filename="../../src/chat/ChatWindow.ui" line="111"/>
+        <location filename="../../src/chat/ChatWindow.ui" line="114"/>
         <source>Login</source>
         <translation>Войти</translation>
     </message>
     <message>
-        <location filename="../../src/chat/ChatWindow.ui" line="116"/>
+        <location filename="../../src/chat/ChatWindow.ui" line="119"/>
         <source>Logout</source>
         <translation>Выйти</translation>
     </message>
     <message>
-        <location filename="../../src/chat/ChatWindow.cpp" line="29"/>
+        <location filename="../../src/chat/ChatWindow.cpp" line="30"/>
         <source>Logged out</source>
         <translation>Не в сети</translation>
     </message>
     <message>
-        <location filename="../../src/chat/ChatWindow.cpp" line="56"/>
+        <location filename="../../src/chat/ChatWindow.cpp" line="40"/>
         <source>Authorization</source>
         <translation>Авторизация</translation>
     </message>

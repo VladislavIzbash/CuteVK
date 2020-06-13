@@ -24,5 +24,5 @@ private slots:
 
 private:
     Ui::ChatWindow *ui;
-    QWebEngineView *loginView;
+    QWebEngineView *m_loginView;
 };

@@ -1,10 +1,10 @@
 #pragma once
 
+#include "src/chat/dialoglist/DialogListModel.h"
+
 #include <QObject>
 #include <QUrl>
 #include <QNetworkRequest>
-
-#include "../chat/DialogListModel.h"
 
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -14,7 +14,7 @@ class ApiClient : public QObject
     Q_OBJECT
 
 public:
-    explicit ApiClient(const QString &token, QObject *parent = nullptr);
+    ApiClient(const QString &token, QObject *parent = nullptr);
 
     void queryConversationsAsync(int offset, int count);
 

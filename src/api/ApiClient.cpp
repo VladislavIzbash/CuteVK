@@ -54,12 +54,12 @@ void ApiClient::queryConversationsAsync(int offset, int count)
     args.addQueryItem("filter", "all");
 
     QNetworkReply *reply = m_networkManager->get(prepareRequest("messages.getConversations", args));
-    connect(reply, &QNetworkReply::finished, [=] () {
+    connect(reply, &QNetworkReply::finished, this, [=] () {
 
         QJsonArray conversations = getResponseValue(reply).toObject().value("items").toArray();
 
         QVector<DialogEntry> dialogs;
-        for (const QJsonValue &item : conversations) {
+        for (const QJsonValue &item : qAsConst(conversations)) {
             QJsonObject conversation = item.toObject().value("conversation").toObject();
             QJsonObject peer = conversation.value("peer").toObject();
 
@@ -72,7 +72,7 @@ void ApiClient::queryConversationsAsync(int offset, int count)
 
                 QImage photo = downloadPhotoSync(chatSettings.value("photo").toObject().value("photo_50").toString());
 
-                dialogs.append({photo, title, true});
+                dialogs.append({photo, title, true, true});
             }
         }
 
@@ -99,7 +99,7 @@ DialogEntry ApiClient::queryUserInfoSync(int id)
 
     QImage photo = downloadPhotoSync(user.value("photo_50").toString());
 
-    return {photo, name, static_cast<bool>(online)};
+    return {photo, name, static_cast<bool>(online), false};
 }
 
 QImage ApiClient::downloadPhotoSync(const QString &url)

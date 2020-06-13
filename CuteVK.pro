@@ -1,4 +1,4 @@
-QT += core gui webengine webenginewidgets
+QT += core gui webengine webenginewidgets KWidgetsAddons
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
