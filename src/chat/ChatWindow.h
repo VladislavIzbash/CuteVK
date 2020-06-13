@@ -4,8 +4,10 @@
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ChatWindow; }
-class QWebEngineView;
 QT_END_NAMESPACE
+
+class QWebEngineView;
+class ApiClient;
 
 class ChatWindow : public QMainWindow
 {
@@ -23,5 +25,4 @@ private slots:
 private:
     Ui::ChatWindow *ui;
     QWebEngineView *loginView;
-
 };

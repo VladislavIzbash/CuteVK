@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>838</width>
-    <height>623</height>
+    <width>1090</width>
+    <height>702</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,7 +61,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>838</width>
+     <width>1090</width>
      <height>30</height>
     </rect>
    </property>
@@ -97,7 +97,11 @@
    <widget class="QWidget" name="dialogDockContents">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QListView" name="dialogView"/>
+      <widget class="QListView" name="dialogView">
+       <property name="spacing">
+        <number>2</number>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>

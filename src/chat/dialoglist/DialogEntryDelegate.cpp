@@ -5,6 +5,9 @@
 #include <QPainter>
 #include <QDebug>
 
+const int PHOTO_SIZE = 50;
+const int INDICATOR_WIDTH = 5;
+
 DialogEntryDelegate::DialogEntryDelegate(QImage defaultPhoto, QObject *parent)
     : QAbstractItemDelegate(parent)
     , m_defaultPhoto(defaultPhoto)
@@ -38,6 +41,8 @@ void DialogEntryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
 
     // Online indicator
     painter->fillRect(option.rect.width() - INDICATOR_WIDTH, 0, INDICATOR_WIDTH, option.rect.height(), dialog.online ? Qt::green : Qt::gray);
+
+    painter->setPen(option.palette.Foreground);
 
     painter->restore();
 }

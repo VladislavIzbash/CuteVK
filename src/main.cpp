@@ -5,6 +5,8 @@
 #include <QTranslator>
 #include <QtWebEngine>
 
+#include "api/ApiClient.h"
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -15,6 +17,8 @@ int main(int argc, char *argv[])
 
     ChatWindow w;
     w.show();
+
+
 
     return app.exec();
 }

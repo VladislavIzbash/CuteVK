@@ -3,6 +3,8 @@
 #include <QAbstractListModel>
 #include <QPixmap>
 
+class ApiClient;
+
 struct DialogEntry {
     QImage photo;
     QString name;
@@ -16,7 +18,7 @@ class DialogListModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    explicit DialogListModel(QObject *parent = nullptr);
+    explicit DialogListModel(ApiClient *apiClient, QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
@@ -24,6 +26,7 @@ public:
 
 private:
     QVector<DialogEntry> m_dialogs;
+    ApiClient *m_apiClient;
 
 };
 

@@ -1,15 +1,16 @@
 #include "DialogListModel.h"
 
-DialogListModel::DialogListModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-    QImage emptyImage;
-    QString name = QString::fromUtf8("Владислав Избаш ");
+#include "../api/ApiClient.h"
 
-    for (int i = 0; i < 9; i++) {
-        bool online = qrand() % 2;
-        m_dialogs.append({emptyImage, name + QString::number(i), online});
-    }
+DialogListModel::DialogListModel(ApiClient *apiClient, QObject *parent)
+    : QAbstractListModel(parent)
+    , m_apiClient(apiClient)
+{
+    m_apiClient->queryConversationsAsync(0, 10);
+    connect(m_apiClient, &ApiClient::queryConversationsDone, [this] (QVector<DialogEntry> dialogs) {
+       m_dialogs.append(dialogs);
+       emit dataChanged(createIndex(0, 0), createIndex(10, 0));
+    });
 }
 
 

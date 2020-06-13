@@ -16,17 +16,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    src/apiclient/ApiClient.cpp \
+    src/api/ApiClient.cpp \
     src/chat/ChatWindow.cpp \
-    src/chat/DialogEntryDelegate.cpp \
-    src/chat/DialogListModel.cpp \
+    src/chat/dialoglist/DialogEntryDelegate.cpp \
+    src/chat/dialoglist/DialogListModel.cpp \
+    src/chat/dialoglist/DialogListWidget.cpp \
     src/main.cpp
 
 HEADERS += \
-    src/apiclient/ApiClient.h \
+    src/api/ApiClient.h \
     src/chat/ChatWindow.h \
-    src/chat/DialogEntryDelegate.h \
-    src/chat/DialogListModel.h
+    src/chat/dialoglist/DialogEntryDelegate.h \
+    src/chat/dialoglist/DialogListModel.h \
+    src/chat/dialoglist/DialogListWidget.h
 
 FORMS += \
     src/chat/ChatWindow.ui

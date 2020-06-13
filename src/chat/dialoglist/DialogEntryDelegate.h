@@ -14,9 +14,6 @@ public:
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 private:
-    static const int PHOTO_SIZE = 50;
-    static const int INDICATOR_WIDTH = 5;
-
     const QImage m_defaultPhoto;
 
 };

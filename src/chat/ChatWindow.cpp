@@ -3,6 +3,7 @@
 
 #include "DialogEntryDelegate.h"
 #include "DialogListModel.h"
+#include "../api/ApiClient.h"
 
 #include <QLabel>
 #include <QHBoxLayout>
@@ -33,11 +34,14 @@ ChatWindow::ChatWindow(QWidget *parent)
 
     QImageReader imageReader(":/images/photo_placeholder");
 
-    ui->dialogView->setModel(new DialogListModel());
+    ApiClient *apiClient = new ApiClient("442f8df8d8777ce8efa688530c4d8ef3f503dd81d5a3dacd759ff770ed5730848a2c78d176c2ed417be38", this);
+    DialogListModel *dialogModel = new DialogListModel(apiClient, this);
+
+    ui->dialogView->setModel(dialogModel);
     ui->dialogView->setItemDelegate(new DialogEntryDelegate(imageReader.read()));
 
-    connect(ui->actionLogin, SIGNAL(triggered()), this, SLOT(openLoginWindow()));
-    connect(loginView, SIGNAL(urlChanged(const QUrl&)), this, SLOT(extractToken(const QUrl&)));
+    connect(ui->actionLogin, &QAction::triggered, this, &ChatWindow::openLoginWindow);
+    connect(loginView, &QWebEngineView::urlChanged, this, &ChatWindow::extractToken);
 }
 
 ChatWindow::~ChatWindow()
@@ -50,8 +54,8 @@ void ChatWindow::openLoginWindow()
 {
     loginView->setFixedSize(800, 500);
     loginView->setWindowTitle(tr("Authorization"));
-    loginView->page()->profile()->setPersistentCookiesPolicy(QWebEngineProfile::NoPersistentCookies);
-    loginView->load(QUrl("https://oauth.vk.com/authorize?client_id=6700788&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends&response_type=token&v=5.52"));
+    //loginView->page()->profile()->setPersistentCookiesPolicy(QWebEngineProfile::NoPersistentCookies);
+    loginView->load(QUrl("https://oauth.vk.com/authorize?client_id=2685278&scope=friends,photos,audio,video,status,wall,groups,messages,offline&redirect_uri=https://api.vk.com/blank.html&display=page&response_type=token&v=5.60"));
     loginView->show();
 }
 
