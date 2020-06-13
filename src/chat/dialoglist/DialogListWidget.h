@@ -13,7 +13,8 @@ public:
     explicit DialogListWidget(QWidget *parent = nullptr);
 
 private slots:
-    void displayList();
+    void hideSpinner();
+    void showSpinner();
 
 private:
     QListView *m_dialogList;

@@ -19,7 +19,7 @@ public:
     void queryConversationsAsync(int offset, int count);
 
 signals:
-   void queryConversationsDone(QVector<DialogEntry> dialogs);
+   void queryConversationsDone(QVector<DialogEntry> dialogs, int total);
 
 private:
     QNetworkAccessManager* m_networkManager;
@@ -29,9 +29,9 @@ private:
 
     QNetworkRequest prepareRequest(const QString &method, const QUrlQuery args);
 
-    QJsonValue getResponseValue(QNetworkReply *source);
+    QJsonValue readResponseValue(QNetworkReply *source);
 
-    DialogEntry queryUserInfoSync(int id);
+    DialogEntry getUserById(int id, const QJsonArray &profiles);
 
     QImage downloadPhotoSync(const QString &url);
 };
