@@ -25,23 +25,20 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    bool isFetchingMore() const;
+
 protected:
     void fetchMore(const QModelIndex &parent) override;
 
     bool canFetchMore(const QModelIndex &parent) const override;
 
-signals:
-    void loadingStarted();
-    void loadingDone();
-
 private slots:
     void addLoadedDialogs(QVector<DialogEntry> dialogs, int total);
 
 private:
-    QVector<DialogEntry> m_dialogs;
+    QVector<DialogEntry> m_dialogList;
     ApiClient *m_apiClient;
-    bool m_loading = true;
-    int m_totalDialogs = 0;
-
+    bool m_isFetching = false;
+    int m_totalDialogs = 100;
 };
 

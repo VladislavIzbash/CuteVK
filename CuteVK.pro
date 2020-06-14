@@ -17,7 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     src/api/ApiClient.cpp \
-    src/chat/ChatWindow.cpp \
+    src/chat/MainWindow.cpp \
     src/chat/dialoglist/DialogEntryDelegate.cpp \
     src/chat/dialoglist/DialogListModel.cpp \
     src/chat/dialoglist/DialogListWidget.cpp \
@@ -25,13 +25,13 @@ SOURCES += \
 
 HEADERS += \
     src/api/ApiClient.h \
-    src/chat/ChatWindow.h \
+    src/chat/MainWindow.h \
     src/chat/dialoglist/DialogEntryDelegate.h \
     src/chat/dialoglist/DialogListModel.h \
     src/chat/dialoglist/DialogListWidget.h
 
 FORMS += \
-    src/chat/ChatWindow.ui
+    src/chat/MainWindow.ui
 
 TRANSLATIONS += \
     resources/translations/CuteVK_ru_RU.ts

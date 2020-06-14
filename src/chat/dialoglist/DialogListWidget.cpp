@@ -7,42 +7,44 @@
 
 #include <QListView>
 #include <QVBoxLayout>
+#include <QDebug>
 #include <KF5/KWidgetsAddons/KBusyIndicatorWidget>
-#include <QMovie>
 
 DialogListWidget::DialogListWidget(QWidget *parent)
-    : QWidget(parent)
-    , m_dialogList(new QListView(this))
+    : QListView(parent)
+    , m_fetchmoreSpinner(new KBusyIndicatorWidget(this))
     , m_loadingSpinner(new KBusyIndicatorWidget(this))
 {
     ApiClient *apiClient = new ApiClient("442f8df8d8777ce8efa688530c4d8ef3f503dd81d5a3dacd759ff770ed5730848a2c78d176c2ed417be38", this);
 
     DialogListModel *dialogModel = new DialogListModel(apiClient);
-    connect(dialogModel, &DialogListModel::loadingDone, this, &DialogListWidget::hideSpinner);
-    connect(dialogModel, &DialogListModel::loadingStarted, this, &DialogListWidget::showSpinner);
-
-    m_dialogList->setModel(dialogModel);
-    m_dialogList->setItemDelegate(new DialogEntryDelegate);
-    m_dialogList->setSpacing(2);
-    m_dialogList->hide();
+    setModel(dialogModel);
+    setItemDelegate(new DialogEntryDelegate);
 
     m_loadingSpinner->setFixedSize(50, 50);
-    m_loadingSpinner->setGeometry(m_dialogList->width() / 2, m_dialogList->height(), 50, 50);
 
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(m_dialogList);
+    m_fetchmoreSpinner->setFixedSize(30, 30);
+    m_fetchmoreSpinner->hide();
+
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->addWidget(m_loadingSpinner, 0, Qt::AlignCenter);
+    layout->addWidget(m_fetchmoreSpinner, 0, Qt::AlignHCenter | Qt::AlignBottom);
     setLayout(layout);
+
+    connect(dialogModel, &DialogListModel::dataChanged, m_loadingSpinner, &KBusyIndicatorWidget::hide);
 }
 
-void DialogListWidget::hideSpinner()
+void DialogListWidget::paintEvent(QPaintEvent *event)
 {
-    m_loadingSpinner->hide();
-    m_dialogList->show();
-}
+    QListView::paintEvent(event);
 
-void DialogListWidget::showSpinner()
-{
-    m_loadingSpinner->setFixedSize(30, 30);
-    m_loadingSpinner->setGeometry(m_dialogList->width() / 2 - 15, m_dialogList->height() - 30, 30, 30);
-    m_loadingSpinner->show();
+    if (!indexAt(QPoint(0, height())).isValid()
+            && qobject_cast<DialogListModel*>(model())->isFetchingMore()
+            && m_loadingSpinner->isHidden()) {
+
+        m_fetchmoreSpinner->show();
+
+    } else {
+        m_fetchmoreSpinner->hide();
+    }
 }

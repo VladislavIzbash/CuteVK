@@ -4,13 +4,12 @@
 
 #include <QDebug>
 
-const int BATCH_SIZE = 12;
+const int FETCH_COUNT = 12;
 
 DialogListModel::DialogListModel(ApiClient *apiClient, QObject *parent)
     : QAbstractListModel(parent)
     , m_apiClient(apiClient)
 {
-    m_apiClient->queryConversationsAsync(0, BATCH_SIZE);
     connect(m_apiClient, &ApiClient::queryConversationsDone, this, &DialogListModel::addLoadedDialogs);
 }
 
@@ -20,7 +19,7 @@ int DialogListModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return m_dialogs.count();
+    return m_dialogList.count();
 }
 
 QVariant DialogListModel::data(const QModelIndex &index, int role) const
@@ -29,40 +28,44 @@ QVariant DialogListModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     QVariant data;
-    data.setValue(m_dialogs.at(index.row()));
+    data.setValue(m_dialogList.at(index.row()));
 
     return data;
 }
 
+bool DialogListModel::isFetchingMore() const
+{
+    return m_isFetching;
+}
 
 void DialogListModel::fetchMore(const QModelIndex &parent)
 {
     if(parent.isValid())
         return;
 
-    if (m_loading == false) {
-        m_apiClient->queryConversationsAsync(m_dialogs.count(), BATCH_SIZE);
-        emit loadingStarted();
-        m_loading = true;
+    if (m_isFetching == false) {
+        m_apiClient->queryConversationsAsync(m_dialogList.count(), FETCH_COUNT);
+
+        m_isFetching = true;
     }
 }
 
 bool DialogListModel::canFetchMore(const QModelIndex &parent) const
 {
-    if (parent.isValid() || m_loading)
+    if (parent.isValid() || m_isFetching)
         return false;
 
-    return m_dialogs.count() < m_totalDialogs;
+    return m_dialogList.count() < m_totalDialogs;
 }
 
 void DialogListModel::addLoadedDialogs(QVector<DialogEntry> dialogs, int total)
 {
     m_totalDialogs = total;
 
-    beginInsertRows(QModelIndex(), m_dialogs.count(), m_dialogs.count() + dialogs.count());
-    m_dialogs.append(dialogs);
+    beginInsertRows(QModelIndex(), m_dialogList.count(), m_dialogList.count() + dialogs.count());
+    m_dialogList.append(dialogs);
     endInsertRows();
 
-    emit loadingDone();
-    m_loading = false;
+    m_isFetching = false;
+    emit dataChanged(index(m_dialogList.count()), index(m_dialogList.count() + dialogs.count()));
 }

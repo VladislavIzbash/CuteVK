@@ -1,4 +1,4 @@
-#include "chat/ChatWindow.h"
+#include "chat/MainWindow.h"
 
 #include "api/ApiClient.h"
 
@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     translator.load(":/translations/" + QLocale::system().name());
     app.installTranslator(&translator);
 
-    ChatWindow window;
+    MainWindow window;
     window.show();
 
     return app.exec();

@@ -1,23 +1,22 @@
 #pragma once
 
-#include <QWidget>
+#include <QListView>
 
 class QListView;
 class KBusyIndicatorWidget;
 
-class DialogListWidget : public QWidget
+class DialogListWidget : public QListView
 {
     Q_OBJECT
 
 public:
     explicit DialogListWidget(QWidget *parent = nullptr);
 
-private slots:
-    void hideSpinner();
-    void showSpinner();
+protected:
+    void paintEvent(QPaintEvent *event);
 
 private:
-    QListView *m_dialogList;
+    KBusyIndicatorWidget *m_fetchmoreSpinner;
     KBusyIndicatorWidget *m_loadingSpinner;
 };
 

@@ -9,13 +9,13 @@ QT_END_NAMESPACE
 class QWebEngineView;
 class ApiClient;
 
-class ChatWindow : public QMainWindow
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    ChatWindow(QWidget *parent = nullptr);
-    ~ChatWindow();
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
 
 private slots:
     void openLoginWindow();

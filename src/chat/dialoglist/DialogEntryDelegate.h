@@ -15,6 +15,5 @@ public:
 
 private:
     const QImage m_defaultPhoto;
-
 };
 

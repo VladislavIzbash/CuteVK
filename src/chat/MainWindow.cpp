@@ -1,4 +1,4 @@
-#include "ChatWindow.h"
+#include "MainWindow.h"
 #include "ui_ChatWindow.h"
 
 #include "dialoglist/DialogEntryDelegate.h"
@@ -14,7 +14,7 @@
 #include <QDebug>
 #include <QUrlQuery>
 
-ChatWindow::ChatWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::ChatWindow)
     , m_loginView(new QWebEngineView)
@@ -33,27 +33,27 @@ ChatWindow::ChatWindow(QWidget *parent)
 
     ui->statusbar->addWidget(statusBarWidget);
 
-    connect(ui->actionLogin, &QAction::triggered, this, &ChatWindow::openLoginWindow);
-    connect(m_loginView, &QWebEngineView::urlChanged, this, &ChatWindow::extractToken);
+    connect(ui->actionLogin, &QAction::triggered, this, &MainWindow::openLoginWindow);
+    connect(m_loginView, &QWebEngineView::urlChanged, this, &MainWindow::extractToken);
 
     m_loginView->setFixedSize(800, 500);
     m_loginView->setWindowTitle(tr("Authorization"));
     m_loginView->page()->profile()->setPersistentCookiesPolicy(QWebEngineProfile::NoPersistentCookies);
 }
 
-ChatWindow::~ChatWindow()
+MainWindow::~MainWindow()
 {
     delete ui;
     delete m_loginView;
 }
 
-void ChatWindow::openLoginWindow()
+void MainWindow::openLoginWindow()
 {
     m_loginView->load(QUrl("https://oauth.vk.com/authorize?client_id=2685278&scope=friends,photos,audio,video,status,wall,groups,messages,offline&redirect_uri=https://api.vk.com/blank.html&display=page&response_type=token&v=5.60"));
     m_loginView->show();
 }
 
-void ChatWindow::extractToken(const QUrl &url)
+void MainWindow::extractToken(const QUrl &url)
 {
     QString fixed = url.toString().replace("#", "?");
     QUrlQuery query((QUrl(fixed)));
