@@ -1,18 +1,9 @@
 #pragma once
 
+#include "src/api/ApiClient.h"
+
 #include <QAbstractListModel>
 #include <QPixmap>
-
-class ApiClient;
-
-struct DialogEntry {
-    QImage photo;
-    QString name;
-    bool online;
-    bool isChat;
-};
-
-Q_DECLARE_METATYPE(DialogEntry);
 
 class DialogListModel : public QAbstractListModel
 {
@@ -33,10 +24,10 @@ protected:
     bool canFetchMore(const QModelIndex& parent) const override;
 
 private slots:
-    void addLoadedDialogs(const QVector<DialogEntry>& dialogs, int total);
+    void addLoadedConversations(const QVector<Conversation>& conversations, int total);
 
 private:
-    QVector<DialogEntry> m_dialogList;
+    QVector<Conversation> m_conversationList;
     ApiClient* m_apiClient;
     bool m_isFetching = false;
     int m_totalDialogs = 100;

@@ -37,8 +37,6 @@ QNetworkRequest ApiClient::prepareRequest(const QString& method, const QUrlQuery
             .arg(versionAndToken().query())
             .arg(args.query());
 
-    //qDebug() << url;
-
     return QNetworkRequest(url);
 }
 
@@ -62,13 +60,14 @@ void ApiClient::queryConversationsAsync(int offset, int count)
         QJsonArray conversations = response.value("items").toArray();
         QJsonArray profiles = response.value("profiles").toArray();
 
-        QVector<DialogEntry> dialogs;
+        QVector<Conversation> dialogs;
         for (const QJsonValue& item : qAsConst(conversations)) {
             QJsonObject conversation = item.toObject().value("conversation").toObject();
             QJsonObject peer = conversation.value("peer").toObject();
+            int id = peer.value("id").toInt();
 
             if (peer.value("type").toString() == "user") {
-                dialogs.append(getUserById(peer.value("id").toInt(), profiles));
+                dialogs.append(getUserById(id, profiles));
 
             } else {
                 QJsonObject chatSettings = conversation.value("chat_settings").toObject();
@@ -76,7 +75,7 @@ void ApiClient::queryConversationsAsync(int offset, int count)
 
                 QImage photo = downloadPhotoSync(chatSettings.value("photo").toObject().value("photo_50").toString());
 
-                dialogs.append({photo, title, true, true});
+                dialogs.append({id, title, photo, true, true});
             }
         }
 
@@ -85,7 +84,7 @@ void ApiClient::queryConversationsAsync(int offset, int count)
 }
 
 
-DialogEntry ApiClient::getUserById(int id, const QJsonArray& profiles)
+Conversation ApiClient::getUserById(int id, const QJsonArray& profiles)
 {
     for (const QJsonValue& profileVal : qAsConst(profiles)) {
         QJsonObject profile = profileVal.toObject();
@@ -95,7 +94,7 @@ DialogEntry ApiClient::getUserById(int id, const QJsonArray& profiles)
             bool online = profile.value("online").toInt();
             QImage photo = downloadPhotoSync(profile.value("photo_50").toString());
 
-            return {photo, name, online, false};
+            return {id, name, photo, false, online};
         }
     }
 

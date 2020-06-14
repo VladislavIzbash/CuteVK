@@ -1,6 +1,7 @@
 #include "DialogEntryDelegate.h"
 
 #include "DialogListModel.h"
+#include "src/api/ApiClient.h"
 
 #include <QPainter>
 #include <QDebug>
@@ -16,10 +17,10 @@ DialogEntryDelegate::DialogEntryDelegate(QObject* parent)
 
 void DialogEntryDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    if (!index.data().canConvert<DialogEntry>())
+    if (!index.data().canConvert<Conversation>())
         return;
 
-    DialogEntry dialog = qvariant_cast<DialogEntry>(index.data());
+    Conversation conv = qvariant_cast<Conversation>(index.data());
 
     painter->save();
 
@@ -32,17 +33,17 @@ void DialogEntryDelegate::paint(QPainter* painter, const QStyleOptionViewItem& o
     }
 
     // Photo
-    painter->drawImage(0, 0, dialog.photo.isNull() ? m_defaultPhoto : dialog.photo);
+    painter->drawImage(0, 0, conv.photo.isNull() ? m_defaultPhoto : conv.photo);
 
     // Name centered
     QFont font = painter->font();
     font.setPixelSize(15);
     painter->setFont(font);
-    painter->drawText(PHOTO_SIZE + 20, 0, option.rect.width() - PHOTO_SIZE - INDICATOR_WIDTH, PHOTO_SIZE, Qt::AlignVCenter, dialog.name);
+    painter->drawText(PHOTO_SIZE + 20, 0, option.rect.width() - PHOTO_SIZE - INDICATOR_WIDTH, PHOTO_SIZE, Qt::AlignVCenter, conv.title);
 
     // Online indicator
-    if (!dialog.isChat) {
-        painter->fillRect(option.rect.width() - INDICATOR_WIDTH, 0, INDICATOR_WIDTH, option.rect.height(), dialog.online ? Qt::green : Qt::gray);
+    if (!conv.isChat) {
+        painter->fillRect(option.rect.width() - INDICATOR_WIDTH, 0, INDICATOR_WIDTH, option.rect.height(), conv.online ? Qt::green : Qt::gray);
     }
 
     painter->setPen(option.palette.Foreground);
