@@ -6,7 +6,7 @@
 
 const int FETCH_COUNT = 12;
 
-DialogListModel::DialogListModel(ApiClient *apiClient, QObject *parent)
+DialogListModel::DialogListModel(ApiClient* apiClient, QObject* parent)
     : QAbstractListModel(parent)
     , m_apiClient(apiClient)
 {
@@ -14,7 +14,7 @@ DialogListModel::DialogListModel(ApiClient *apiClient, QObject *parent)
 }
 
 
-int DialogListModel::rowCount(const QModelIndex &parent) const
+int DialogListModel::rowCount(const QModelIndex& parent) const
 {
     if (parent.isValid())
         return 0;
@@ -22,7 +22,7 @@ int DialogListModel::rowCount(const QModelIndex &parent) const
     return m_dialogList.count();
 }
 
-QVariant DialogListModel::data(const QModelIndex &index, int role) const
+QVariant DialogListModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid() && role != Qt::DisplayRole)
         return QVariant();
@@ -38,7 +38,7 @@ bool DialogListModel::isFetchingMore() const
     return m_isFetching;
 }
 
-void DialogListModel::fetchMore(const QModelIndex &parent)
+void DialogListModel::fetchMore(const QModelIndex& parent)
 {
     if(parent.isValid())
         return;
@@ -50,7 +50,7 @@ void DialogListModel::fetchMore(const QModelIndex &parent)
     }
 }
 
-bool DialogListModel::canFetchMore(const QModelIndex &parent) const
+bool DialogListModel::canFetchMore(const QModelIndex& parent) const
 {
     if (parent.isValid() || m_isFetching)
         return false;
@@ -58,7 +58,7 @@ bool DialogListModel::canFetchMore(const QModelIndex &parent) const
     return m_dialogList.count() < m_totalDialogs;
 }
 
-void DialogListModel::addLoadedDialogs(QVector<DialogEntry> dialogs, int total)
+void DialogListModel::addLoadedDialogs(const QVector<DialogEntry>& dialogs, int total)
 {
     m_totalDialogs = total;
 

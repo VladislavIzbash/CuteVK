@@ -9,12 +9,12 @@
 const int PHOTO_SIZE = 50;
 const int INDICATOR_WIDTH = 5;
 
-DialogEntryDelegate::DialogEntryDelegate(QObject *parent)
+DialogEntryDelegate::DialogEntryDelegate(QObject* parent)
     : QAbstractItemDelegate(parent)
     , m_defaultPhoto(QImageReader(":/images/photo_placeholder").read())
 {}
 
-void DialogEntryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void DialogEntryDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     if (!index.data().canConvert<DialogEntry>())
         return;
@@ -50,7 +50,7 @@ void DialogEntryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &o
     painter->restore();
 }
 
-QSize DialogEntryDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+QSize DialogEntryDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     Q_UNUSED(index);
     Q_UNUSED(option);

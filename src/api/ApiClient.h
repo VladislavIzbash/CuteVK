@@ -14,12 +14,12 @@ class ApiClient : public QObject
     Q_OBJECT
 
 public:
-    ApiClient(const QString &token, QObject *parent = nullptr);
+    ApiClient(const QString& token, QObject* parent = nullptr);
 
     void queryConversationsAsync(int offset, int count);
 
 signals:
-   void queryConversationsDone(QVector<DialogEntry> dialogs, int total);
+   void queryConversationsDone(const QVector<DialogEntry>& dialogs, int total);
 
 private:
     QNetworkAccessManager* m_networkManager;
@@ -27,12 +27,12 @@ private:
 
     QUrlQuery versionAndToken();
 
-    QNetworkRequest prepareRequest(const QString &method, const QUrlQuery args);
+    QNetworkRequest prepareRequest(const QString& method, const QUrlQuery& args);
 
-    QJsonValue readResponseValue(QNetworkReply *source);
+    QJsonValue readResponseValue(QNetworkReply* source);
 
-    DialogEntry getUserById(int id, const QJsonArray &profiles);
+    DialogEntry getUserById(int id, const QJsonArray& profiles);
 
-    QImage downloadPhotoSync(const QString &url);
+    QImage downloadPhotoSync(const QString& url);
 };
 

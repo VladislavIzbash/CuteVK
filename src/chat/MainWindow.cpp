@@ -53,7 +53,7 @@ void MainWindow::openLoginWindow()
     m_loginView->show();
 }
 
-void MainWindow::extractToken(const QUrl &url)
+void MainWindow::extractToken(const QUrl& url)
 {
     QString fixed = url.toString().replace("#", "?");
     QUrlQuery query((QUrl(fixed)));

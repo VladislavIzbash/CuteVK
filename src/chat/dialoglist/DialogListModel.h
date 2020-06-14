@@ -19,25 +19,25 @@ class DialogListModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    DialogListModel(ApiClient *apiClient, QObject *parent = nullptr);
+    DialogListModel(ApiClient* apiClient, QObject* parent = nullptr);
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
     bool isFetchingMore() const;
 
 protected:
-    void fetchMore(const QModelIndex &parent) override;
+    void fetchMore(const QModelIndex& parent) override;
 
-    bool canFetchMore(const QModelIndex &parent) const override;
+    bool canFetchMore(const QModelIndex& parent) const override;
 
 private slots:
-    void addLoadedDialogs(QVector<DialogEntry> dialogs, int total);
+    void addLoadedDialogs(const QVector<DialogEntry>& dialogs, int total);
 
 private:
     QVector<DialogEntry> m_dialogList;
-    ApiClient *m_apiClient;
+    ApiClient* m_apiClient;
     bool m_isFetching = false;
     int m_totalDialogs = 100;
 };

@@ -13,7 +13,7 @@
 
 const QString BASE_URL = "https://api.vk.com/method/%1?%2";
 
-ApiClient::ApiClient(const QString &token, QObject *parent)
+ApiClient::ApiClient(const QString& token, QObject* parent)
     : QObject(parent)
     , m_networkManager(new QNetworkAccessManager(this))
     , m_token(token)
@@ -30,7 +30,7 @@ QUrlQuery ApiClient::versionAndToken()
     return query;
 }
 
-QNetworkRequest ApiClient::prepareRequest(const QString &method, const QUrlQuery args)
+QNetworkRequest ApiClient::prepareRequest(const QString& method, const QUrlQuery& args)
 {
     QString url = QString("https://api.vk.com/method/%1?%2&%3")
             .arg(method)
@@ -42,7 +42,7 @@ QNetworkRequest ApiClient::prepareRequest(const QString &method, const QUrlQuery
     return QNetworkRequest(url);
 }
 
-inline QJsonValue ApiClient::readResponseValue(QNetworkReply *source)
+inline QJsonValue ApiClient::readResponseValue(QNetworkReply* source)
 {
     return QJsonDocument::fromJson(source->readAll()).object().value("response");
 }
@@ -56,14 +56,14 @@ void ApiClient::queryConversationsAsync(int offset, int count)
     args.addQueryItem("extended", "1");
     args.addQueryItem("fields", "photo_50,online");
 
-    QNetworkReply *reply = m_networkManager->get(prepareRequest("messages.getConversations", args));
-    connect(reply, &QNetworkReply::finished, this, [=] () {
+    QNetworkReply* reply = m_networkManager->get(prepareRequest("messages.getConversations", args));
+    connect(reply, &QNetworkReply::finished, [=] () {
         QJsonObject response = readResponseValue(reply).toObject();
         QJsonArray conversations = response.value("items").toArray();
         QJsonArray profiles = response.value("profiles").toArray();
 
         QVector<DialogEntry> dialogs;
-        for (const QJsonValue &item : qAsConst(conversations)) {
+        for (const QJsonValue& item : qAsConst(conversations)) {
             QJsonObject conversation = item.toObject().value("conversation").toObject();
             QJsonObject peer = conversation.value("peer").toObject();
 
@@ -85,9 +85,9 @@ void ApiClient::queryConversationsAsync(int offset, int count)
 }
 
 
-DialogEntry ApiClient::getUserById(int id, const QJsonArray &profiles)
+DialogEntry ApiClient::getUserById(int id, const QJsonArray& profiles)
 {
-    for (const QJsonValue &profileVal : qAsConst(profiles)) {
+    for (const QJsonValue& profileVal : qAsConst(profiles)) {
         QJsonObject profile = profileVal.toObject();
 
         if (profile.value("id").toInt() == id) {
@@ -102,7 +102,7 @@ DialogEntry ApiClient::getUserById(int id, const QJsonArray &profiles)
     return {};
 }
 
-QImage ApiClient::downloadPhotoSync(const QString &url)
+QImage ApiClient::downloadPhotoSync(const QString& url)
 {
     QNetworkReply *reply = m_networkManager->get(QNetworkRequest(url));
     QEventLoop loop;

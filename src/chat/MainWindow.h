@@ -14,15 +14,15 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
 private slots:
     void openLoginWindow();
 
-    void extractToken(const QUrl &url);
+    void extractToken(const QUrl& url);
 
 private:
-    Ui::ChatWindow *ui;
-    QWebEngineView *m_loginView;
+    Ui::ChatWindow* ui;
+    QWebEngineView* m_loginView;
 };
