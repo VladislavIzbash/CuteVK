@@ -1,7 +1,6 @@
 #include "ApiClient.h"
 
 #include <QUrlQuery>
-#include <QDebug>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QJsonDocument>
@@ -9,7 +8,7 @@
 #include <QJsonArray>
 #include <QImageReader>
 #include <QVector>
-#include <QThread>
+#include <QStatusTipEvent>
 
 const QString BASE_URL = "https://api.vk.com/method/%1?%2";
 

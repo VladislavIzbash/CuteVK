@@ -4,7 +4,6 @@
 #include "src/api/ApiClient.h"
 
 #include <QPainter>
-#include <QDebug>
 #include <QImageReader>
 
 const int PHOTO_SIZE = 50;
@@ -27,7 +26,7 @@ void DialogEntryDelegate::paint(QPainter* painter, const QStyleOptionViewItem& o
     painter->setRenderHint(QPainter::Antialiasing);
     painter->translate(option.rect.x(), option.rect.y());
 
-    // Highlight
+    // Selection highlight
     if (option.state & QStyle::State_Selected) {
         painter->fillRect(0, 0, option.rect.width(), PHOTO_SIZE, option.palette.highlight());
     }

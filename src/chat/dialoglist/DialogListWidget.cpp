@@ -12,57 +12,70 @@
 #include <QSettings>
 #include <QCoreApplication>
 #include <QStatusTipEvent>
+#include <QStateMachine>
 
 DialogListWidget::DialogListWidget(QWidget* parent)
-    : QListView(parent)
-    , m_fetchmoreSpinner(new KBusyIndicatorWidget(this))
+    : QWidget(parent)
+    , m_stateMachine(new QStateMachine)
+    , m_dialogList(new QListView)
     , m_loadingSpinner(new KBusyIndicatorWidget(this))
 {
+    DialogListModel* dialogModel = new DialogListModel;
     ApiClient* apiClient = new ApiClient(this);
-    QSettings settings;
+    dialogModel->setApiClient(apiClient);
 
+    QSettings settings;
     if (settings.contains("token")) {
         apiClient->setToken(settings.value("token").toString());
     }
 
-    DialogListModel* dialogModel = new DialogListModel;
-    dialogModel->setApiClient(apiClient);
-
-    setModel(dialogModel);
-    setItemDelegate(new DialogEntryDelegate);
-
-    m_loadingSpinner->setFixedSize(50, 50);
-
-    m_fetchmoreSpinner->setFixedSize(30, 30);
-    m_fetchmoreSpinner->hide();
-
-    setSpacing(2);
+    m_dialogList->setModel(dialogModel);
+    m_dialogList->setItemDelegate(new DialogEntryDelegate);
+    m_dialogList->setSpacing(2);
 
     QVBoxLayout* layout = new QVBoxLayout();
+    layout->addWidget(m_dialogList);
     layout->addWidget(m_loadingSpinner, 0, Qt::AlignCenter);
-    layout->addWidget(m_fetchmoreSpinner, 0, Qt::AlignHCenter | Qt::AlignBottom);
     setLayout(layout);
 
-    connect(dialogModel, &DialogListModel::dataChanged, m_loadingSpinner, &KBusyIndicatorWidget::hide);
-    connect(apiClient, &ApiClient::apiError, [=] (const QString& message) {
-        m_loadingSpinner->hide();
+    QState* loadingState = new QState;
+    QState* readyState = new QState;
+    QState* fetchingMoreState = new QState;
 
-        QCoreApplication::postEvent(parent, new QStatusTipEvent(message));
-        qWarning() << message;
-    });
+    loadingState->assignProperty(m_loadingSpinner, "minimumSize", QSize(50, 50));
+    connect(loadingState, &QState::entered, m_dialogList, &QListView::hide);
+    loadingState->addTransition(dialogModel, &DialogListModel::dataChanged, readyState);
+    loadingState->addTransition(apiClient, &ApiClient::apiError, readyState);
+
+    connect(readyState, &QState::entered, m_loadingSpinner, &KBusyIndicatorWidget::hide);
+    connect(readyState, &QState::entered, m_dialogList, &QListView::show);
+    readyState->addTransition(model(), &DialogListModel::fetchingMore, fetchingMoreState);
+
+    fetchingMoreState->assignProperty(m_loadingSpinner, "minimumSize", QSize(20, 20));
+    connect(fetchingMoreState, &QState::entered, m_loadingSpinner, &KBusyIndicatorWidget::show);
+    connect(fetchingMoreState, &QState::entered, m_dialogList, &QListView::show);
+    fetchingMoreState->addTransition(dialogModel, &DialogListModel::dataChanged, readyState);
+    fetchingMoreState->addTransition(apiClient, &ApiClient::apiError, loadingState);
+
+    m_stateMachine->addState(loadingState);
+    m_stateMachine->addState(readyState);
+    m_stateMachine->addState(fetchingMoreState);
+    m_stateMachine->setInitialState(loadingState);
+    m_stateMachine->start();
+
+    connect(apiClient, &ApiClient::apiError, this, &DialogListWidget::printError);
 }
 
-void DialogListWidget::paintEvent(QPaintEvent* event)
+DialogListModel* DialogListWidget::model()
 {
-    QListView::paintEvent(event);
-
-    if (!indexAt(QPoint(0, height() - 1)).isValid()
-            && qobject_cast<DialogListModel*>(model())->isFetchingMore()
-            && m_loadingSpinner->isHidden()) {
-
-        m_fetchmoreSpinner->show();
-
-    } else {
-        m_fetchmoreSpinner->hide();
-    }
+    return static_cast<DialogListModel*>(m_dialogList->model());
 }
+
+void DialogListWidget::printError(const QString& message)
+{
+    QCoreApplication::postEvent(parent(), new QStatusTipEvent(message));
+    qWarning() << message;
+}
+
+
+

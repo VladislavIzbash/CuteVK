@@ -1,14 +1,9 @@
 #include "MainWindow.h"
 #include "ui_ChatWindow.h"
 
-#include "dialoglist/DialogEntryDelegate.h"
 #include "dialoglist/DialogListModel.h"
-
 #include "src/api/ApiClient.h"
 
-#include <QLabel>
-#include <QHBoxLayout>
-#include <QImageReader>
 #include <QWebEngineView>
 #include <QWebEngineProfile>
 #include <QDebug>
@@ -56,7 +51,7 @@ void MainWindow::saveToken(const QUrl& url)
         QSettings settings;
         settings.setValue("token", token);
 
-        DialogListModel* dialogModel = qobject_cast<DialogListModel*>(ui->dialogListWidget->model());
+        DialogListModel* dialogModel = ui->dialogListWidget->model();
         dialogModel->apiClient()->setToken(token);
         dialogModel->reset();
     }
@@ -64,7 +59,7 @@ void MainWindow::saveToken(const QUrl& url)
 
 void MainWindow::logout()
 {
-    DialogListModel* dialogModel = qobject_cast<DialogListModel*>(ui->dialogListWidget->model());
+    DialogListModel* dialogModel = ui->dialogListWidget->model();
     dialogModel->apiClient()->setToken("");
     dialogModel->reset();
 

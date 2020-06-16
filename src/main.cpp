@@ -1,9 +1,6 @@
 #include "chat/MainWindow.h"
 
-#include "api/ApiClient.h"
-
 #include <QApplication>
-#include <QtDebug>
 #include <QTranslator>
 #include <QtWebEngine>
 

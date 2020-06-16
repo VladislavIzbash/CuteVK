@@ -97,17 +97,7 @@
    <widget class="QWidget" name="dialogDockContents">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="DialogListWidget" name="dialogListWidget">
-       <property name="minimumSize">
-        <size>
-         <width>200</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="spacing">
-        <number>0</number>
-       </property>
-      </widget>
+      <widget class="DialogListWidget" name="dialogList"/>
      </item>
     </layout>
    </widget>

@@ -1,24 +1,26 @@
 #pragma once
 
-#include <QListView>
+#include <QWidget>
 
 class QListView;
 class KBusyIndicatorWidget;
+class QStateMachine;
+class DialogListModel;
 
-class DialogListWidget : public QListView
+class DialogListWidget : public QWidget
 {
     Q_OBJECT
 
 public:
     explicit DialogListWidget(QWidget* parent = nullptr);
 
-protected:
-    void paintEvent(QPaintEvent* event);
+    DialogListModel* model();
 
-private:
-    KBusyIndicatorWidget* m_fetchmoreSpinner;
+private:  
+    QStateMachine* m_stateMachine;
+    QListView* m_dialogList;
     KBusyIndicatorWidget* m_loadingSpinner;
 
-
+    void printError(const QString& message);
 };
 

@@ -2,8 +2,6 @@
 
 #include "src/api/ApiClient.h"
 
-#include <QDebug>
-#include <QCoreApplication>
 #include <QTimer>
 
 const int FETCH_COUNT = 12;
@@ -35,16 +33,13 @@ QVariant DialogListModel::data(const QModelIndex& index, int role) const
     return data;
 }
 
-bool DialogListModel::isFetchingMore() const
-{
-    return m_isFetching;
-}
-
 void DialogListModel::reset()
 {
     beginResetModel();
     m_conversationList.clear();
     endResetModel();
+
+    emit dataChanged(index(0), index(m_conversationList.count()));
 }
 
 void DialogListModel::fetchMore(const QModelIndex& parent)
@@ -56,6 +51,8 @@ void DialogListModel::fetchMore(const QModelIndex& parent)
         m_apiClient->getConversations(m_conversationList.count(), FETCH_COUNT);
 
         m_isFetching = true;
+
+        emit fetchingMore();
     }
 }
 
@@ -67,7 +64,7 @@ bool DialogListModel::canFetchMore(const QModelIndex& parent) const
     return m_conversationList.count() < m_totalDialogs;
 }
 
-void DialogListModel::addLoadedConversations(const QVector<Conversation>& conversations, int total)
+void DialogListModel::addConversations(const QVector<Conversation>& conversations, int total)
 {
     m_totalDialogs = total;
 
@@ -88,23 +85,23 @@ void DialogListModel::updateConversations(const QMap<int, bool> &statusMap)
     emit dataChanged(index(0), index(m_conversationList.count()));
 }
 
-void DialogListModel::onApiError()
+void DialogListModel::stopFetching()
 {
     m_isFetching = false;
 }
 
-ApiClient *DialogListModel::apiClient() const
+ApiClient* DialogListModel::apiClient() const
 {
     return m_apiClient;
 }
 
-void DialogListModel::setApiClient(ApiClient *apiClient)
+void DialogListModel::setApiClient(ApiClient* apiClient)
 {
     m_apiClient = apiClient;
 
-    connect(m_apiClient, &ApiClient::getConversationsDone, this, &DialogListModel::addLoadedConversations);
+    connect(m_apiClient, &ApiClient::getConversationsDone, this, &DialogListModel::addConversations);
     connect(m_apiClient, &ApiClient::getConversationStatusDone, this, &DialogListModel::updateConversations);
-    connect(m_apiClient, &ApiClient::apiError, this, &DialogListModel::onApiError);
+    connect(m_apiClient, &ApiClient::apiError, this, &DialogListModel::stopFetching);
 
     connect(m_updateTimer, &QTimer::timeout, m_apiClient, &ApiClient::getConversationStatus);
 }

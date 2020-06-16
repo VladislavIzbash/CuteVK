@@ -3,7 +3,6 @@
 #include "src/api/ApiClient.h"
 
 #include <QAbstractListModel>
-#include <QPixmap>
 
 class DialogListModel : public QAbstractListModel
 {
@@ -16,24 +15,25 @@ public:
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
-    bool isFetchingMore() const;
+    ApiClient* apiClient() const;
+    void setApiClient(ApiClient* apiClient);
 
     void reset();
-
-    ApiClient *apiClient() const;
-    void setApiClient(ApiClient *apiClient);
 
 protected:
     bool canFetchMore(const QModelIndex& parent) const override;
 
     void fetchMore(const QModelIndex& parent) override;
 
+signals:
+    void fetchingMore();
+
 private slots:
-    void addLoadedConversations(const QVector<Conversation>& conversations, int total);
+    void addConversations(const QVector<Conversation>& conversations, int total);
 
     void updateConversations(const QMap<int, bool>& statusMap);
 
-    void onApiError();
+    void stopFetching();
 
 private:
     QVector<Conversation> m_conversationList;

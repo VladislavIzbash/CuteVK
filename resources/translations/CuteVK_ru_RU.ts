@@ -34,12 +34,12 @@
         <translation>Диалоги</translation>
     </message>
     <message>
-        <location filename="../../src/chat/MainWindow.ui" line="117"/>
+        <location filename="../../src/chat/MainWindow.ui" line="107"/>
         <source>Login</source>
         <translation>Войти</translation>
     </message>
     <message>
-        <location filename="../../src/chat/MainWindow.ui" line="122"/>
+        <location filename="../../src/chat/MainWindow.ui" line="112"/>
         <source>Logout</source>
         <translation>Выйти</translation>
     </message>
@@ -59,7 +59,7 @@
         <translation type="obsolete">Не в сети</translation>
     </message>
     <message>
-        <location filename="../../src/chat/MainWindow.cpp" line="26"/>
+        <location filename="../../src/chat/MainWindow.cpp" line="21"/>
         <source>Authorization</source>
         <translation type="unfinished">Авторизация</translation>
     </message>
