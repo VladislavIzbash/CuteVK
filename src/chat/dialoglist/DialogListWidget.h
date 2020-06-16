@@ -18,5 +18,7 @@ protected:
 private:
     KBusyIndicatorWidget* m_fetchmoreSpinner;
     KBusyIndicatorWidget* m_loadingSpinner;
+
+
 };
 

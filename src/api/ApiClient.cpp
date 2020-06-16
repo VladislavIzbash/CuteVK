@@ -48,7 +48,7 @@ QNetworkRequest ApiClient::prepareRequest(const QString& method, const QUrlQuery
     return QNetworkRequest(url);
 }
 
-void ApiClient::queryConversationsAsync(int offset, int count)
+void ApiClient::getConversations(int offset, int count)
 {
     QUrlQuery args;
     args.addQueryItem("offset", QString::number(offset));
@@ -88,7 +88,34 @@ void ApiClient::queryConversationsAsync(int offset, int count)
             }
         }
 
-        emit queryConversationsDone(dialogs, response.value("count").toInt());
+        emit getConversationsDone(dialogs, response.value("count").toInt());
+    });
+}
+
+void ApiClient::getConversationStatus()
+{
+    QUrlQuery args;
+    args.addQueryItem("filter", "all");
+    args.addQueryItem("extended", "1");
+    args.addQueryItem("fields", "online");
+
+    QNetworkReply* reply = m_networkManager->get(prepareRequest("messages.getConversations", args));
+    connect(reply, &QNetworkReply::finished, [=] () {
+        QMap<int, bool> statusMap;
+
+        QJsonObject root = QJsonDocument::fromJson(reply->readAll()).object();
+        if (root.contains("error")) {
+            emit apiError(root.value("error").toObject().value("error_msg").toString());
+            return;
+        }
+
+        for (const QJsonValue& item : root.value("response").toObject().value("profiles").toArray()) {
+            QJsonObject profile = item.toObject();
+
+            statusMap.insert(profile.value("id").toInt(), profile.value("online").toInt());
+        }
+
+        emit getConversationStatusDone(statusMap);
     });
 }
 

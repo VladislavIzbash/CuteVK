@@ -28,10 +28,15 @@ public:
     QString getToken() const;
     void setToken(const QString &token);
 
-    void queryConversationsAsync(int offset, int count);
+public slots:
+    void getConversations(int offset, int count);
+
+    void getConversationStatus();
 
 signals:
-    void queryConversationsDone(const QVector<Conversation>& conversations, int total);
+    void getConversationsDone(const QVector<Conversation>& conversations, int total);
+
+    void getConversationStatusDone(const QMap<int, bool>& statusMap);
 
     void apiError(const QString& message);
 

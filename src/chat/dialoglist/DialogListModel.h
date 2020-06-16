@@ -31,11 +31,14 @@ protected:
 private slots:
     void addLoadedConversations(const QVector<Conversation>& conversations, int total);
 
+    void updateConversations(const QMap<int, bool>& statusMap);
+
     void onApiError();
 
 private:
     QVector<Conversation> m_conversationList;
     ApiClient* m_apiClient = nullptr;
+    QTimer* m_updateTimer;
     bool m_isFetching = false;
     int m_totalDialogs = 100;
 };

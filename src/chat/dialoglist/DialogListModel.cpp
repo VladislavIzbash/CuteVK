@@ -4,12 +4,17 @@
 
 #include <QDebug>
 #include <QCoreApplication>
+#include <QTimer>
 
 const int FETCH_COUNT = 12;
+const int UPDATE_INTERVAL = 20;
 
 DialogListModel::DialogListModel(QObject* parent)
     : QAbstractListModel(parent)
-{}
+    , m_updateTimer(new QTimer(this))
+{
+    m_updateTimer->start(UPDATE_INTERVAL * 1000);
+}
 
 int DialogListModel::rowCount(const QModelIndex& parent) const
 {
@@ -48,7 +53,7 @@ void DialogListModel::fetchMore(const QModelIndex& parent)
         return;
 
     if (m_isFetching == false && m_apiClient != nullptr) {
-        m_apiClient->queryConversationsAsync(m_conversationList.count(), FETCH_COUNT);
+        m_apiClient->getConversations(m_conversationList.count(), FETCH_COUNT);
 
         m_isFetching = true;
     }
@@ -74,6 +79,15 @@ void DialogListModel::addLoadedConversations(const QVector<Conversation>& conver
     emit dataChanged(index(m_conversationList.count()), index(m_conversationList.count() + conversations.count()));
 }
 
+void DialogListModel::updateConversations(const QMap<int, bool> &statusMap)
+{
+    for (Conversation& conv : m_conversationList) {
+        conv.online = statusMap.value(conv.id);
+    }
+
+    emit dataChanged(index(0), index(m_conversationList.count()));
+}
+
 void DialogListModel::onApiError()
 {
     m_isFetching = false;
@@ -87,6 +101,10 @@ ApiClient *DialogListModel::apiClient() const
 void DialogListModel::setApiClient(ApiClient *apiClient)
 {
     m_apiClient = apiClient;
-    connect(m_apiClient, &ApiClient::queryConversationsDone, this, &DialogListModel::addLoadedConversations);
+
+    connect(m_apiClient, &ApiClient::getConversationsDone, this, &DialogListModel::addLoadedConversations);
+    connect(m_apiClient, &ApiClient::getConversationStatusDone, this, &DialogListModel::updateConversations);
     connect(m_apiClient, &ApiClient::apiError, this, &DialogListModel::onApiError);
+
+    connect(m_updateTimer, &QTimer::timeout, m_apiClient, &ApiClient::getConversationStatus);
 }

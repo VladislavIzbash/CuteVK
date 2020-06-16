@@ -36,6 +36,8 @@ DialogListWidget::DialogListWidget(QWidget* parent)
     m_fetchmoreSpinner->setFixedSize(30, 30);
     m_fetchmoreSpinner->hide();
 
+    setSpacing(2);
+
     QVBoxLayout* layout = new QVBoxLayout();
     layout->addWidget(m_loadingSpinner, 0, Qt::AlignCenter);
     layout->addWidget(m_fetchmoreSpinner, 0, Qt::AlignHCenter | Qt::AlignBottom);
