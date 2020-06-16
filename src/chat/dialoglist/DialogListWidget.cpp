@@ -9,15 +9,25 @@
 #include <QVBoxLayout>
 #include <QDebug>
 #include <KF5/KWidgetsAddons/KBusyIndicatorWidget>
+#include <QSettings>
+#include <QCoreApplication>
+#include <QStatusTipEvent>
 
 DialogListWidget::DialogListWidget(QWidget* parent)
     : QListView(parent)
     , m_fetchmoreSpinner(new KBusyIndicatorWidget(this))
     , m_loadingSpinner(new KBusyIndicatorWidget(this))
 {
-    ApiClient* apiClient = new ApiClient("442f8df8d8777ce8efa688530c4d8ef3f503dd81d5a3dacd759ff770ed5730848a2c78d176c2ed417be38", this);
+    ApiClient* apiClient = new ApiClient(this);
+    QSettings settings;
 
-    DialogListModel* dialogModel = new DialogListModel(apiClient);
+    if (settings.contains("token")) {
+        apiClient->setToken(settings.value("token").toString());
+    }
+
+    DialogListModel* dialogModel = new DialogListModel;
+    dialogModel->setApiClient(apiClient);
+
     setModel(dialogModel);
     setItemDelegate(new DialogEntryDelegate);
 
@@ -32,13 +42,19 @@ DialogListWidget::DialogListWidget(QWidget* parent)
     setLayout(layout);
 
     connect(dialogModel, &DialogListModel::dataChanged, m_loadingSpinner, &KBusyIndicatorWidget::hide);
+    connect(apiClient, &ApiClient::apiError, [=] (const QString& message) {
+        m_loadingSpinner->hide();
+
+        QCoreApplication::postEvent(parent, new QStatusTipEvent(message));
+        qWarning() << message;
+    });
 }
 
 void DialogListWidget::paintEvent(QPaintEvent* event)
 {
     QListView::paintEvent(event);
 
-    if (!indexAt(QPoint(0, height())).isValid()
+    if (!indexAt(QPoint(0, height() - 20)).isValid()
             && qobject_cast<DialogListModel*>(model())->isFetchingMore()
             && m_loadingSpinner->isHidden()) {
 

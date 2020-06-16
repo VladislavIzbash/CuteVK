@@ -23,22 +23,25 @@ class ApiClient : public QObject
     Q_OBJECT
 
 public:
-    ApiClient(const QString& token, QObject* parent = nullptr);
+    ApiClient(QObject* parent = nullptr);
+
+    QString getToken() const;
+    void setToken(const QString &token);
 
     void queryConversationsAsync(int offset, int count);
 
 signals:
-   void queryConversationsDone(const QVector<Conversation>& conversations, int total);
+    void queryConversationsDone(const QVector<Conversation>& conversations, int total);
+
+    void apiError(const QString& message);
 
 private:
     QNetworkAccessManager* m_networkManager;
-    const QString m_token;
+    QString m_token;
 
     QUrlQuery versionAndToken();
 
     QNetworkRequest prepareRequest(const QString& method, const QUrlQuery& args);
-
-    QJsonValue readResponseValue(QNetworkReply* source);
 
     Conversation getUserById(int id, const QJsonArray& profiles);
 

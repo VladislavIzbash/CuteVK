@@ -13,6 +13,7 @@
 #include <QWebEngineProfile>
 #include <QDebug>
 #include <QUrlQuery>
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -20,25 +21,14 @@ MainWindow::MainWindow(QWidget *parent)
     , m_loginView(new QWebEngineView)
 {
     ui->setupUi(this);
-    QLabel* statusIcon = new QLabel(ui->statusbar);
-    statusIcon->setPixmap(QIcon::fromTheme("dialog-error").pixmap(15, 15));
-
-    QWidget* statusBarWidget = new QWidget(ui->statusbar);
-    QHBoxLayout* hLayout = new QHBoxLayout;
-
-    hLayout->addWidget(statusIcon);
-    hLayout->addWidget(new QLabel(tr("Logged out")));
-
-    statusBarWidget->setLayout(hLayout);
-
-    ui->statusbar->addWidget(statusBarWidget);
-
-    connect(ui->actionLogin, &QAction::triggered, this, &MainWindow::openLoginWindow);
-    connect(m_loginView, &QWebEngineView::urlChanged, this, &MainWindow::extractToken);
 
     m_loginView->setFixedSize(800, 500);
     m_loginView->setWindowTitle(tr("Authorization"));
     m_loginView->page()->profile()->setPersistentCookiesPolicy(QWebEngineProfile::NoPersistentCookies);
+
+    connect(ui->actionLogin, &QAction::triggered, this, &MainWindow::openLoginWindow);
+    connect(ui->actionLogout, &QAction::triggered, this, &MainWindow::logout);
+    connect(m_loginView, &QWebEngineView::urlChanged, this, &MainWindow::saveToken);
 }
 
 MainWindow::~MainWindow()
@@ -53,7 +43,7 @@ void MainWindow::openLoginWindow()
     m_loginView->show();
 }
 
-void MainWindow::extractToken(const QUrl& url)
+void MainWindow::saveToken(const QUrl& url)
 {
     QString fixed = url.toString().replace("#", "?");
     QUrlQuery query((QUrl(fixed)));
@@ -61,8 +51,24 @@ void MainWindow::extractToken(const QUrl& url)
     QString token = query.queryItemValue("access_token");
 
     if (!token.isNull()) {
-        qDebug() << token;
         m_loginView->hide();
+
+        QSettings settings;
+        settings.setValue("token", token);
+
+        DialogListModel* dialogModel = qobject_cast<DialogListModel*>(ui->dialogListWidget->model());
+        dialogModel->apiClient()->setToken(token);
+        dialogModel->fetchMore(QModelIndex());
     }
+}
+
+void MainWindow::logout()
+{
+    DialogListModel* dialogModel = qobject_cast<DialogListModel*>(ui->dialogListWidget->model());
+    dialogModel->apiClient()->setToken("");
+    dialogModel->clear();
+
+    QSettings settings;
+    settings.remove("token");
 }
 

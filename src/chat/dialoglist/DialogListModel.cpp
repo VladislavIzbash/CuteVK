@@ -3,16 +3,13 @@
 #include "src/api/ApiClient.h"
 
 #include <QDebug>
+#include <QCoreApplication>
 
 const int FETCH_COUNT = 12;
 
-DialogListModel::DialogListModel(ApiClient* apiClient, QObject* parent)
+DialogListModel::DialogListModel(QObject* parent)
     : QAbstractListModel(parent)
-    , m_apiClient(apiClient)
-{
-    connect(m_apiClient, &ApiClient::queryConversationsDone, this, &DialogListModel::addLoadedConversations);
-}
-
+{}
 
 int DialogListModel::rowCount(const QModelIndex& parent) const
 {
@@ -38,12 +35,19 @@ bool DialogListModel::isFetchingMore() const
     return m_isFetching;
 }
 
+void DialogListModel::clear()
+{
+    beginResetModel();
+    m_conversationList.clear();
+    endResetModel();
+}
+
 void DialogListModel::fetchMore(const QModelIndex& parent)
 {
     if(parent.isValid())
         return;
 
-    if (m_isFetching == false) {
+    if (m_isFetching == false && m_apiClient != nullptr) {
         m_apiClient->queryConversationsAsync(m_conversationList.count(), FETCH_COUNT);
 
         m_isFetching = true;
@@ -52,7 +56,7 @@ void DialogListModel::fetchMore(const QModelIndex& parent)
 
 bool DialogListModel::canFetchMore(const QModelIndex& parent) const
 {
-    if (parent.isValid() || m_isFetching)
+    if (parent.isValid() || m_isFetching || m_apiClient == nullptr)
         return false;
 
     return m_conversationList.count() < m_totalDialogs;
@@ -68,4 +72,21 @@ void DialogListModel::addLoadedConversations(const QVector<Conversation>& conver
 
     m_isFetching = false;
     emit dataChanged(index(m_conversationList.count()), index(m_conversationList.count() + conversations.count()));
+}
+
+void DialogListModel::onApiError()
+{
+    m_isFetching = false;
+}
+
+ApiClient *DialogListModel::apiClient() const
+{
+    return m_apiClient;
+}
+
+void DialogListModel::setApiClient(ApiClient *apiClient)
+{
+    m_apiClient = apiClient;
+    connect(m_apiClient, &ApiClient::queryConversationsDone, this, &DialogListModel::addLoadedConversations);
+    connect(m_apiClient, &ApiClient::apiError, this, &DialogListModel::onApiError);
 }

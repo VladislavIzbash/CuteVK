@@ -13,11 +13,19 @@
 
 const QString BASE_URL = "https://api.vk.com/method/%1?%2";
 
-ApiClient::ApiClient(const QString& token, QObject* parent)
+ApiClient::ApiClient(QObject* parent)
     : QObject(parent)
     , m_networkManager(new QNetworkAccessManager(this))
-    , m_token(token)
+{}
+
+QString ApiClient::getToken() const
 {
+    return m_token;
+}
+
+void ApiClient::setToken(const QString &token)
+{
+    m_token = token;
 }
 
 QUrlQuery ApiClient::versionAndToken()
@@ -40,11 +48,6 @@ QNetworkRequest ApiClient::prepareRequest(const QString& method, const QUrlQuery
     return QNetworkRequest(url);
 }
 
-inline QJsonValue ApiClient::readResponseValue(QNetworkReply* source)
-{
-    return QJsonDocument::fromJson(source->readAll()).object().value("response");
-}
-
 void ApiClient::queryConversationsAsync(int offset, int count)
 {
     QUrlQuery args;
@@ -56,7 +59,13 @@ void ApiClient::queryConversationsAsync(int offset, int count)
 
     QNetworkReply* reply = m_networkManager->get(prepareRequest("messages.getConversations", args));
     connect(reply, &QNetworkReply::finished, [=] () {
-        QJsonObject response = readResponseValue(reply).toObject();
+        QJsonObject root = QJsonDocument::fromJson(reply->readAll()).object();
+        if (root.contains("error")) {
+            emit apiError(root.value("error").toObject().value("error_msg").toString());
+            return;
+        }
+
+        QJsonObject response = root.value("response").toObject();
         QJsonArray conversations = response.value("items").toArray();
         QJsonArray profiles = response.value("profiles").toArray();
 
@@ -82,7 +91,6 @@ void ApiClient::queryConversationsAsync(int offset, int count)
         emit queryConversationsDone(dialogs, response.value("count").toInt());
     });
 }
-
 
 Conversation ApiClient::getUserById(int id, const QJsonArray& profiles)
 {

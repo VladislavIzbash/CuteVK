@@ -55,12 +55,11 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../src/chat/MainWindow.cpp" line="30"/>
         <source>Logged out</source>
-        <translation type="unfinished">Не в сети</translation>
+        <translation type="obsolete">Не в сети</translation>
     </message>
     <message>
-        <location filename="../../src/chat/MainWindow.cpp" line="40"/>
+        <location filename="../../src/chat/MainWindow.cpp" line="26"/>
         <source>Authorization</source>
         <translation type="unfinished">Авторизация</translation>
     </message>

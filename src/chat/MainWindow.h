@@ -20,7 +20,9 @@ public:
 private slots:
     void openLoginWindow();
 
-    void extractToken(const QUrl& url);
+    void saveToken(const QUrl& url);
+
+    void logout();
 
 private:
     Ui::ChatWindow* ui;
