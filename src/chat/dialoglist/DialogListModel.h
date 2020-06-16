@@ -16,17 +16,17 @@ public:
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
-    void fetchMore(const QModelIndex& parent) override;
-
     bool isFetchingMore() const;
 
-    void clear();
+    void reset();
 
     ApiClient *apiClient() const;
     void setApiClient(ApiClient *apiClient);
 
 protected:
     bool canFetchMore(const QModelIndex& parent) const override;
+
+    void fetchMore(const QModelIndex& parent) override;
 
 private slots:
     void addLoadedConversations(const QVector<Conversation>& conversations, int total);

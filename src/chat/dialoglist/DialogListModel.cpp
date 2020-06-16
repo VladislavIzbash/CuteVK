@@ -40,7 +40,7 @@ bool DialogListModel::isFetchingMore() const
     return m_isFetching;
 }
 
-void DialogListModel::clear()
+void DialogListModel::reset()
 {
     beginResetModel();
     m_conversationList.clear();

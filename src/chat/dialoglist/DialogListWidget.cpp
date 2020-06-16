@@ -56,7 +56,7 @@ void DialogListWidget::paintEvent(QPaintEvent* event)
 {
     QListView::paintEvent(event);
 
-    if (!indexAt(QPoint(0, height() - 20)).isValid()
+    if (!indexAt(QPoint(0, height() - 1)).isValid()
             && qobject_cast<DialogListModel*>(model())->isFetchingMore()
             && m_loadingSpinner->isHidden()) {
 

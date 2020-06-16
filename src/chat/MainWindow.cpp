@@ -58,7 +58,7 @@ void MainWindow::saveToken(const QUrl& url)
 
         DialogListModel* dialogModel = qobject_cast<DialogListModel*>(ui->dialogListWidget->model());
         dialogModel->apiClient()->setToken(token);
-        dialogModel->fetchMore(QModelIndex());
+        dialogModel->reset();
     }
 }
 
@@ -66,7 +66,7 @@ void MainWindow::logout()
 {
     DialogListModel* dialogModel = qobject_cast<DialogListModel*>(ui->dialogListWidget->model());
     dialogModel->apiClient()->setToken("");
-    dialogModel->clear();
+    dialogModel->reset();
 
     QSettings settings;
     settings.remove("token");
