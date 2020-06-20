@@ -22,7 +22,7 @@ class ApiClient : public QObject
     Q_OBJECT
 
 public:
-    ApiClient(QObject* parent = nullptr);
+    explicit ApiClient(QObject* parent = nullptr);
 
     QString getToken() const;
     void setToken(const QString &token);

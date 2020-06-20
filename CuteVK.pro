@@ -16,22 +16,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/LoadingWidget.cpp \
     src/api/ApiClient.cpp \
-    src/chat/MainWindow.cpp \
-    src/chat/dialoglist/DialogEntryDelegate.cpp \
-    src/chat/dialoglist/DialogListModel.cpp \
-    src/chat/dialoglist/DialogListWidget.cpp \
+    src/MainWindow.cpp \
+    src/chat/ChatWidget.cpp \
+    src/dialoglist/DialogEntryDelegate.cpp \
+    src/dialoglist/DialogListModel.cpp \
+    src/dialoglist/DialogListWidget.cpp \
     src/main.cpp
 
 HEADERS += \
+    src/LoadingWidget.h \
     src/api/ApiClient.h \
-    src/chat/MainWindow.h \
-    src/chat/dialoglist/DialogEntryDelegate.h \
-    src/chat/dialoglist/DialogListModel.h \
-    src/chat/dialoglist/DialogListWidget.h
+    src/MainWindow.h \
+    src/chat/ChatWidget.h \
+    src/dialoglist/DialogEntryDelegate.h \
+    src/dialoglist/DialogListModel.h \
+    src/dialoglist/DialogListWidget.h
 
 FORMS += \
-    src/chat/MainWindow.ui
+    src/MainWindow.ui
 
 TRANSLATIONS += \
     resources/translations/CuteVK_ru_RU.ts

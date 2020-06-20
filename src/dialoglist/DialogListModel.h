@@ -9,7 +9,7 @@ class DialogListModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    DialogListModel(QObject* parent = nullptr);
+    explicit DialogListModel(QObject* parent = nullptr);
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
